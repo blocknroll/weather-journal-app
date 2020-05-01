@@ -21,16 +21,15 @@ app.use(cors());
 // Initialize the main project folder
 app.use(express.static('website'));
 
-
 // Setup Server
 const server = app.listen(port, () => {
+  // Callback to debug
   console.log(`server running on localhost: ${port}`);
 });
 
-// Callback to debug
-
-// Initialize all route with a callback function
-
+// GET route: projectData
+app.get('/all', sendData);
 // Callback function to complete GET '/all'
-
-// Post Route
+function sendData (request, response){
+  response.send(projectData);
+}
