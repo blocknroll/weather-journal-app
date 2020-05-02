@@ -33,3 +33,17 @@ app.get('/all', sendData);
 function sendData (request, response){
   response.send(projectData);
 }
+
+// POST route: addData
+app.post('/addData', addData);
+// Callback function to complete POST '/addData'
+function addData(request, response){
+  newEntry = {
+    temperature: request.body.temperature,
+    date: request.body.date,
+    userResponse: request.body.userResponse,
+  };
+
+  projectData.push(newEntry);
+  console.log(projectData);
+}
