@@ -2,35 +2,60 @@
 
 /* Global Variables */
 const baseURL = 'http://api.openweathermap.org/data/2.5/weather?zip=';
-const apiKey = '&APPID=7cfaed94efeac5637df722a154380881';
+const apiKey = '&units=imperial&APPID=7cfaed94efeac5637df722a154380881';
 // Create a new date instance dynamically with JS
 let d = new Date();
 let newDate = d.getMonth()+'.'+ d.getDate()+'.'+ d.getFullYear();
 
 
 
-// Generate button - event listener
-// with callback function to execute when clicked
-document.querySelector('#generate').addEventListener('click', addEntry);
+// GENERATE button - add event listener
+document.querySelector('#generate').addEventListener('click', performAction);
 
-function addEntry(e){
-  console.log('clicky click click');
-
+// callback function to execute when clicked
+function performAction(e){
   let zip = document.getElementById('zip').value;
-  console.log(zip);
   let feelings = document.querySelector('#feelings').value;
-  console.log(feelings);
-  console.log(baseURL+zip+apiKey);
 
   // GET WEATHER - async GET request
   const getWeather = async (baseURL, zip, apiKey) => {
-    const request = await fetch(baseURL+zip+apiKey);
+    const response = await fetch(baseURL+zip+apiKey);
     try {
-      const data = await request.json();
-      console.log(data);
+      const data = await response.json();
       return data;
     } catch(error) {
-      console.log('error', error);
+      console.log('getWeather error', error);
     }
   };
+
+  getWeather(baseURL, zip, apiKey,)
+  .then(function(data){
+    // add data - Call Function
+    postData('/addData', {temperature:data.main.temp, date:newDate, feelings:feelings} );
+  });
 }
+
+
+
+// async POST Function //////////////////////////
+const postData = async ( url = '', data = {})=>{
+  // console.log(data);
+  const response = await fetch(url, {
+    method: 'POST', // *GET, POST, PUT, DELETE, etc.
+    credentials: 'same-origin', // include, *same-origin, omit
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data), //body datatype must match "Content-Type" header
+  });
+
+  try {
+    // console.log(response);
+    const newData = await response.json();
+    console.log(newData);
+    return newData;
+  }catch(error) {
+    console.log("postData error", error);
+    // appropriately handle the error
+  }
+};
