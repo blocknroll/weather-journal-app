@@ -32,6 +32,20 @@ function performAction(e){
   .then(function(data){
     // add data - Call Function
     postData('/addData', {temperature:data.main.temp, date:newDate, feelings:feelings} );
+  })
+  .then(
+  // UPDATE UI with the returned data
+  updateUI = async () => {
+    const request = await fetch('/all');
+    try{
+      const allData = await request.json();
+      console.log(allData);
+      document.querySelector('#date').innerHTML = allData[allData.length-1].date;
+      document.querySelector('#temp').innerHTML = allData[allData.length-1].temperature;
+      document.querySelector('#content').innerHTML = allData[allData.length-1].feelings;
+    } catch(error) {
+      console.log('updateUI error', error);
+    }
   });
 }
 
