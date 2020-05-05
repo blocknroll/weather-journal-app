@@ -5,7 +5,7 @@ const baseURL = 'http://api.openweathermap.org/data/2.5/weather?zip=';
 const apiKey = '&units=imperial&APPID=7cfaed94efeac5637df722a154380881';
 // Create a new date instance dynamically with JS
 let d = new Date();
-let newDate = d.getMonth()+'.'+ d.getDate()+'.'+ d.getFullYear();
+let newDate = d.getMonth() + 1 + '.' + d.getDate()+ '.' + d.getFullYear();
 
 
 
@@ -31,7 +31,9 @@ function performAction(e){
   getWeather(baseURL, zip, apiKey,)
   .then(function(data){
     // add data - Call Function
-    postData('/addData', {temperature:data.main.temp, date:newDate, feelings:feelings} );
+    postData('/addData',
+            {temperature:data.main.temp, date:newDate, feelings:feelings}
+    );
   })
   .then(
   // UPDATE UI with the returned data
@@ -40,9 +42,13 @@ function performAction(e){
     try{
       const allData = await request.json();
       console.log(allData);
-      document.querySelector('#date').innerHTML = allData[allData.length-1].date;
-      document.querySelector('#temp').innerHTML = allData[allData.length-1].temperature;
-      document.querySelector('#content').innerHTML = allData[allData.length-1].feelings;
+      document.querySelector('#date').innerHTML = 'happy ' +
+                                                  allData[allData.length-1].date + '!';
+      document.querySelector('#temp').innerHTML = "it's " +
+                                                  allData[allData.length-1].temperature.toFixed() +
+                                                  '<span>&#176;</span>F';
+      document.querySelector('#content').innerHTML = "and I'm feeling " +
+                                                     allData[allData.length-1].feelings;
     } catch(error) {
       console.log('updateUI error', error);
     }
