@@ -1,10 +1,16 @@
-# Weather-Journal App Project
+# Weather Journal App
 
 ## Overview
-This project requires you to create an asynchronous web app that uses Web API and user data to dynamically update the UI. 
+The goal of this project was to create an asynchronous web app that uses Web API and user data to dynamically update the UI.
 
-## Instructions
-This will require modifying the `server.js` file and the `website/app.js` file. You can see `index.html` for element references, and once you are finished with the project steps, you can use `style.css` to style your application to customized perfection.
+A user can enter a zip code and their mood, and then click to "Log Your Weather."
 
-## Extras
-If you are interested in testing your code as you go, you can use `tests.js` as a template for writing and running some basic tests for your code.
+An Event Listener is listening for that click, and once it hears it, performs a series of steps, asynchronously:
+
+- First, the user's inputs are retrieved from the DOM.
+
+- Next, the user's zip code is sent in an API call to openweathermap.org.
+
+- After receiving the returned weather data, a POST request is sent to the   server to post the new weather info, along with the user's text input.
+
+- After that's completed, the UI is updated to display the user's post.
