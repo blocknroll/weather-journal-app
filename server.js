@@ -1,7 +1,7 @@
-/*jshint esversion: 6 */
+/*jshint esversion: 9 */
 
 // ENDPOINT: Setup empty JS object to act as endpoint for all routes
-projectData = [];
+projectData = {};
 
 // Require Express to run server and routes
 const express = require('express');
@@ -40,14 +40,18 @@ function sendData (request, response){
 
 // POST route: addData
 app.post('/addData', addData);
+
 // Callback function to complete POST '/addData'
 function addData (request, response){
-  newEntry = {
+
+  const newData = {
     temperature: request.body.temperature,
     date: request.body.date,
     feelings: request.body.feelings
   };
-  projectData.push(newEntry);
-  console.log(newEntry);
-  response.send(newEntry);
+
+  Object.assign(projectData, newData);
+
+  response.send(newData);
+  console.log(projectData);
 }

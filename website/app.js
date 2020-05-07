@@ -42,13 +42,14 @@ function performAction(e){
     try{
       const allData = await request.json();
       console.log(allData);
-      document.querySelector('#date').innerHTML = 'happy ' +
-                                                  allData[allData.length-1].date + '!';
+      document.querySelector('#date').innerHTML = 'happy ' + allData.date + '!';
+
       document.querySelector('#temp').innerHTML = "it's " +
-                                                  allData[allData.length-1].temperature.toFixed() +
+                                                  allData.temperature.toFixed() +
                                                   '<span>&#176;</span>F';
+
       document.querySelector('#content').innerHTML = "and I'm feeling " +
-                                                     allData[allData.length-1].feelings;
+                                                     allData.feelings;
     } catch(error) {
       console.log('updateUI error', error);
     }
@@ -59,7 +60,6 @@ function performAction(e){
 
 // async POST Function //////////////////////////
 const postData = async ( url = '', data = {})=>{
-  // console.log(data);
   const response = await fetch(url, {
     method: 'POST', // *GET, POST, PUT, DELETE, etc.
     credentials: 'same-origin', // include, *same-origin, omit
@@ -70,9 +70,7 @@ const postData = async ( url = '', data = {})=>{
   });
 
   try {
-    // console.log(response);
     const newData = await response.json();
-    console.log(newData);
     return newData;
   }catch(error) {
     console.log("postData error", error);
