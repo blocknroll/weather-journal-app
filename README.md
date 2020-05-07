@@ -1,7 +1,7 @@
 # Weather Journal App
 
 ## Overview
-The goal of this project was to create an asynchronous web app that uses Web API and user data to dynamically update the UI.
+The goal of this project is to create an asynchronous web app that uses Web API and user data to dynamically update the UI.
 
 A user can enter a zip code and their mood, and then click to "Log Your Weather."
 
