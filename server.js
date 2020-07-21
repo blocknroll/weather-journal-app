@@ -1,7 +1,9 @@
 /*jshint esversion: 9 */
 
+require('dotenv').config();
+
 // ENDPOINT: Setup empty JS object to act as endpoint for all routes
-projectData = {};
+let projectData = {};
 
 // Require Express to run server and routes
 const express = require('express');
@@ -27,31 +29,71 @@ const server = app.listen(port, () => {
   console.log(`server running on localhost: ${port}`);
 });
 
+const fetch = require('node-fetch');
 
-// ROUTES //////////////////////////////////////////////
 
-// GET route: projectData
+
+
+
+
+// ROUTES //////////////////////////////////////////////////////////////////
+
+
+// GET:  /all  from projectData ENDPOINT  //////////////////////////////////
+
+// takes 2 arguments: URL, callback function
 app.get('/all', sendData);
+
 // Callback function to complete GET '/all'
-function sendData (request, response){
-  response.send(projectData);
+function sendData (req, res){
+  res.send(projectData);
 }
 
 
-// POST route: addData
+
+// POST:  /getOpenWeather  from OPENWEATHER_API  ///////////////////////////
+
+// takes 2 arguments: URL, callback function
+app.post('/getOpenWeather', getOpenWeather);
+
+// Callback function to complete POST '/getOpenWeather'
+async function getOpenWeather (req, res) {
+  const OPENWEATHER_baseURL = 'http://api.openweathermap.org/data/2.5/';
+  const OPENWEATHER_API_KEY = process.env.OPENWEATHER_API_KEY;
+  const fullZip = 'weather?zip=' + req.body.zip;
+  const relativeURL = fullZip + OPENWEATHER_API_KEY;
+  const fullURL = new URL(relativeURL, OPENWEATHER_baseURL);
+  const finalURL = fullURL.href;
+
+  const openWeatherResponse = await fetch(finalURL);
+  try {
+    const openWeatherData = await openWeatherResponse.json();
+    // 'res' and 'openWeatherData' could be named anything
+    res.send(openWeatherData);
+  } catch(error) {
+    console.log('getOpenWeather error', error);
+  }
+}
+
+
+
+// POST:  /addData  ////////////////////////////////////////////////////////
+
+// takes 2 arguments: URL, callback function
 app.post('/addData', addData);
 
 // Callback function to complete POST '/addData'
-function addData (request, response){
+function addData (req, res){
 
   const newData = {
-    temperature: request.body.temperature,
-    date: request.body.date,
-    feelings: request.body.feelings
+    temperature: req.body.temperature,
+    date: req.body.date,
+    feelings: req.body.feelings
   };
 
+  // add the newData to the projectData ENDPOINT
   Object.assign(projectData, newData);
 
-  response.send(newData);
+  res.send(newData);
   console.log(projectData);
 }

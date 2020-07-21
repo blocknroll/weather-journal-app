@@ -1,42 +1,35 @@
 /*jshint esversion: 8 */
 
-/* Global Variables */
-const baseURL = 'http://api.openweathermap.org/data/2.5/weather?zip=';
-const apiKey = '&units=imperial&APPID=7cfaed94efeac5637df722a154380881';
-// Create a new date instance dynamically with JS
-let d = new Date();
-let newDate = d.getMonth() + 1 + '.' + d.getDate()+ '.' + d.getFullYear();
+// GENERATE button: add event listener. On click, calls logWeather function
+document.querySelector('#generate').addEventListener('click', logWeather);
 
 
 
-// GENERATE button - add event listener
-document.querySelector('#generate').addEventListener('click', performAction);
+// CALLBACK function to execute when GENERATE button is clicked
+function logWeather() {
 
-// callback function to execute when clicked
-function performAction(e){
-  let zip = document.getElementById('zip').value;
-  let feelings = document.querySelector('#feelings').value;
+  const d = new Date();
+  const newDate = d.getMonth() + 1 + '.' + d.getDate()+ '.' + d.getFullYear();
+  const zip = document.getElementById('zip').value;
+  const feelings = document.querySelector('#feelings').value;
 
-  // GET WEATHER - async GET request
-  const getWeather = async (baseURL, zip, apiKey) => {
-    const response = await fetch(baseURL+zip+apiKey);
-    try {
-      const data = await response.json();
-      return data;
-    } catch(error) {
-      console.log('getWeather error', error);
-    }
-  };
+  // pass the zip into /getOpenWeather
+  postData( '/getOpenWeather', {zip: zip} )
 
-  getWeather(baseURL, zip, apiKey,)
-  .then(function(data){
-    // add data - Call Function
-    postData('/addData',
-            {temperature:data.main.temp, date:newDate, feelings:feelings}
+  .then( function(openWeatherData) {
+    // pass the returned 'openWeatherData' into /addData
+    // 'openWeatherData' could be named anything
+    postData( '/addData',
+            {
+              temperature:openWeatherData.main.temp,
+              date:newDate,
+              feelings:feelings
+            }
     );
   })
+
   .then(
-  // UPDATE UI with the returned data
+  // UPDATE UI with the returned data from the ENDPOINT
   updateUI = async () => {
     const request = await fetch('/all');
     try{
@@ -45,7 +38,7 @@ function performAction(e){
       document.querySelector('#date').innerHTML = 'happy ' + allData.date + '!';
 
       document.querySelector('#temp').innerHTML = "it's " +
-                                                  allData.temperature.toFixed() +
+                                                  allData.temperature.toFixed()+
                                                   '<span>&#176;</span>F';
 
       document.querySelector('#content').innerHTML = "and I'm feeling " +
@@ -58,7 +51,10 @@ function performAction(e){
 
 
 
-// async POST Function //////////////////////////
+
+
+
+// async POST Function /////////////////////////////////////////////////////
 const postData = async ( url = '', data = {})=>{
   const response = await fetch(url, {
     method: 'POST', // *GET, POST, PUT, DELETE, etc.
