@@ -20,7 +20,7 @@ The specific goals of this project include:
 ## API info
 
 - __OpenWeatherMap__
-    - <https://https://openweathermap.org/>
+    - <https://openweathermap.org/>
     - input: zip code
     - output: current weather data (JSON)
 
